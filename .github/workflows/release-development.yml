@@ -47,10 +47,10 @@ jobs:
           context: .
           push: true
           build-args: |
-            FORCE_GAME_MODE=false
             BUILD_TYPE=development
             REPO_OWNER=${{ github.repository_owner }}
             REPO_NAME=${{ github.event.repository.name }}
+            FORCE_GAME_MODE=false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
@@ -63,10 +63,10 @@ jobs:
           context: .
           push: true
           build-args: |
-            FORCE_GAME_MODE=true
             BUILD_TYPE=development
             REPO_OWNER=${{ github.repository_owner }}
             REPO_NAME=${{ github.event.repository.name }}
+            FORCE_GAME_MODE=true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:forcegm
           labels: ${{ steps.meta.outputs.labels }}
   run-and-upload-release:

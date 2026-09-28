@@ -93,29 +93,35 @@ COPY --chown=moonlight wasm/platform/ ./moonlight-tizen/wasm/platform/
 COPY --chown=moonlight wasm/static/ ./moonlight-tizen/wasm/static/
 COPY --chown=moonlight .gi[t]/ ./moonlight-tizen/.git/
 
-# This step injects build metadata (build type and short commit SHA) into the system information field by replacing placeholders in the `wasm/platform/index.js` file. This allows the application to display build information on development builds.
+# The following steps inject build metadata into the application such as build type, short commit SHA, and repository information by replacing placeholders in the `wasm/platform/index.js` file.
+# This allows the application to display build information on development builds while keeping release builds clean.
 ARG BUILD_TYPE=release
 ARG REPO_OWNER
 ARG REPO_NAME
-RUN if [ "$BUILD_TYPE" = "development" ]; then \
-		SHORT_SHA=""; \
-		if [ -d "moonlight-tizen/.git" ]; then \
-			SHORT_SHA=$(git -C moonlight-tizen rev-parse --short HEAD); \
-		fi; \
-		sed -i "s/__BUILD_TYPE__/$BUILD_TYPE/g" moonlight-tizen/wasm/platform/index.js && \
-		if [ -n "$SHORT_SHA" ]; then \
-			sed -i "s/__BUILD_COMMIT__/$SHORT_SHA/g" moonlight-tizen/wasm/platform/index.js; \
-		fi && \
-		if [ -n "$REPO_OWNER" ]; then \
-			sed -i "s/const repoOwner = '.*';/const repoOwner = '$REPO_OWNER';/g" moonlight-tizen/wasm/platform/index.js; \
-		fi && \
-		if [ -n "$REPO_NAME" ]; then \
-			sed -i "s/const repoName = '.*';/const repoName = '$REPO_NAME';/g" moonlight-tizen/wasm/platform/index.js; \
-		fi && \
-		echo "Injected build metadata: development (pre-$SHORT_SHA)"; \
-	else \
-		echo "Build type is $BUILD_TYPE, skipping development build metadata injection"; \
-	fi
+RUN \
+    # Always inject the build type, repo owner, and repo name regardless of the build type
+	sed -i "s/__BUILD_TYPE__/$BUILD_TYPE/g" moonlight-tizen/wasm/platform/index.js && \
+    if [ -n "$REPO_OWNER" ]; then \
+        sed -i "s/__REPO_OWNER__/$REPO_OWNER/g" moonlight-tizen/wasm/platform/index.js; \
+    fi && \
+    if [ -n "$REPO_NAME" ]; then \
+        sed -i "s/__REPO_NAME__/$REPO_NAME/g" moonlight-tizen/wasm/platform/index.js; \
+    fi && \
+	echo "Injected base metadata: build type ($BUILD_TYPE), repo owner ($REPO_OWNER), repo name ($REPO_NAME)"; \
+    \
+    # Conditionally inject the short commit SHA only if it's a development build
+    if [ "$BUILD_TYPE" = "development" ]; then \
+        SHORT_SHA=""; \
+        if [ -d "moonlight-tizen/.git" ]; then \
+            SHORT_SHA=$(git -C moonlight-tizen rev-parse --short HEAD); \
+        fi; \
+        if [ -n "$SHORT_SHA" ]; then \
+            sed -i "s/__BUILD_COMMIT__/$SHORT_SHA/g" moonlight-tizen/wasm/platform/index.js; \
+        fi; \
+		echo "Injected development commit hash ($SHORT_SHA)"; \
+    else \
+        echo "Build type is release, skipping commit hash injection."; \
+    fi
 
 RUN cmake --install build --prefix build
 RUN cp moonlight-tizen/res/icon.png build/widget/
