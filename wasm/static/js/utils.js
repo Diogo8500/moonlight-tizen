@@ -544,8 +544,8 @@ NvHTTP.prototype = {
 
       for (var i = 0, len = appElements.length; i < len; i++) {
         appList.push({
-          id: parseInt(appElements[i].getElementsByTagName('ID')[0].innerHTML.trim(), 10),
-          title: appElements[i].getElementsByTagName('AppTitle')[0].innerHTML.trim(),
+          id: parseInt(appElements[i].getElementsByTagName('ID')[0].textContent.trim(), 10),
+          title: appElements[i].getElementsByTagName('AppTitle')[0].textContent.trim(),
         });
       }
 

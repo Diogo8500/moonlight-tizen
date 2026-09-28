@@ -1016,9 +1016,9 @@ function pairingDialog(nvhttpHost, onSuccess, onFailure) {
       // If the host is already in a streaming session or failed during pairing,
       // change the dialog text element to include the hostname and display the returned error message
       if (nvhttpHost.currentGame != 0) {
-        $('#pairingDialogText').html(t('Error: %1$s is currently busy!<br><br>You must stop the running app in order to pair with the host.', nvhttpHost.hostname));
+        $('#pairingDialogText').html(t('Error: %1$s is currently busy!<br><br>You must stop the running app in order to pair with the host.', escapeHTML(nvhttpHost.hostname)));
       } else {
-        $('#pairingDialogText').html(t('Error: Failed to pair with %1$s.<br><br>Please, try pairing with the host again.', nvhttpHost.hostname));
+        $('#pairingDialogText').html(t('Error: Failed to pair with %1$s.<br><br>Please, try pairing with the host again.', escapeHTML(nvhttpHost.hostname)));
       }
       onFailure();
     });
@@ -1073,12 +1073,12 @@ function autoWolDialog(host, onSuccess, onCancel) {
   };
 
   var sendWakeRequest = function() {
-    $('#autoWolDialogText').html(t('Sending a Wake-on-LAN request to %1$s...', host.hostname));
+    $('#autoWolDialogText').html(t('Sending a Wake-on-LAN request to %1$s...', escapeHTML(host.hostname)));
 
     host.sendWOL().then(function(msg) {
       if (msg) console.log('%c[index.js, autoWolDialog]', 'color: green;', msg);
       $('#autoWolDialogText').html(
-        t('Wake-on-LAN request sent to %1$s.', host.hostname) + '<br><br>' +
+        t('Wake-on-LAN request sent to %1$s.', escapeHTML(host.hostname)) + '<br><br>' +
         t('Waiting for the host PC to wake up and connect to the network...')
       );
 
@@ -1124,7 +1124,7 @@ function autoWolDialog(host, onSuccess, onCancel) {
       var errorMessage = typeof error === 'string' ? error : (error && error.message ? error.message : 'Unknown error');
       var translatedError = replaceKnownWolErrorLabels(errorMessage);
       $('#autoWolDialogText').html(
-        t('Failed to send Wake-on-LAN request to %1$s!', host.hostname) + '<br><br>' +
+        t('Failed to send Wake-on-LAN request to %1$s!', escapeHTML(host.hostname)) + '<br><br>' +
         t('Error: %1$s', translatedError)
       );
       // Change the button text to "OK" to indicate that the user can acknowledge the failure
@@ -1172,7 +1172,7 @@ function addHostToGrid(host, ismDNSDiscovered) {
   // Create the host text placeholder that will contain the host name
   var hostText = $('<span>', {
     class: 'host-text',
-    html: host.hostname
+    text: host.hostname
   });
 
   // Create the host menu button with the appropriate attributes for the host menu
@@ -1418,7 +1418,7 @@ function deleteHostDialog(host) {
 
   // Change the dialog title and text elements to include the hostname
   document.getElementById('deleteHostDialogTitle').innerHTML = t('Delete Host');
-  document.getElementById('deleteHostDialogText').innerHTML = t('Are you sure you want to delete %1$s?', host.hostname);
+  document.getElementById('deleteHostDialogText').innerHTML = t('Are you sure you want to delete %1$s?', escapeHTML(host.hostname));
 
   // Show the dialog and push the view
   deleteHostOverlay.style.display = 'flex';
@@ -1566,16 +1566,16 @@ function hostDetailsDialog(host) {
     id: 'hostDetailsDialogText-' + host.serverUid,
     class: 'host-details-text',
     html: [
-      t('Name: %1$s', host.hostname),
-      t('State: %1$s', host.online ? t('ONLINE') : t('OFFLINE')),
-      t('Active Address: %1$s', host.address && host.externalPort ? host.address + ':' + host.externalPort : t('NULL')),
-      t('UUID: %1$s', host.serverUid ? host.serverUid : t('NULL')),
-      t('Local Address: %1$s', host.localAddress && host.externalPort ? host.localAddress + ':' + host.externalPort : t('NULL')),
-      t('MAC Address: %1$s', host.macAddress ? host.macAddress : t('NULL')),
-      t('Pair State: %1$s', host.paired ? t('PAIRED') : t('UNPAIRED')),
-      t('Running Game ID: %1$s', host.currentGame),
-      t('HTTP Port: %1$s', host.httpPort ? host.httpPort : t('NULL')),
-      t('HTTPS Port: %1$s', host.httpsPort ? host.httpsPort : t('NULL'))
+      t('Name: %1$s', escapeHTML(host.hostname)),
+      t('State: %1$s', escapeHTML(host.online) ? t('ONLINE') : t('OFFLINE')),
+      t('Active Address: %1$s', escapeHTML(host.address) && escapeHTML(host.externalPort) ? escapeHTML(host.address) + ':' + escapeHTML(host.externalPort) : t('NULL')),
+      t('UUID: %1$s', escapeHTML(host.serverUid) ? escapeHTML(host.serverUid) : t('NULL')),
+      t('Local Address: %1$s', escapeHTML(host.localAddress) && escapeHTML(host.externalPort) ? escapeHTML(host.localAddress) + ':' + escapeHTML(host.externalPort) : t('NULL')),
+      t('MAC Address: %1$s', escapeHTML(host.macAddress) ? escapeHTML(host.macAddress) : t('NULL')),
+      t('Pair State: %1$s', escapeHTML(host.paired) ? t('PAIRED') : t('UNPAIRED')),
+      t('Running Game ID: %1$s', escapeHTML(host.currentGame)),
+      t('HTTP Port: %1$s', escapeHTML(host.httpPort) ? escapeHTML(host.httpPort) : t('NULL')),
+      t('HTTPS Port: %1$s', escapeHTML(host.httpsPort) ? escapeHTML(host.httpsPort) : t('NULL'))
     ].join('<br>')
   }).appendTo(hostDetailsDialogContent);
 
@@ -2155,7 +2155,7 @@ function wakeOnLanWarningDialog(host) {
   // Set the title and message
   document.getElementById('warningDialogTitle').innerHTML = t('Wake-on-LAN Warning');
   document.getElementById('warningDialogText').innerHTML = t(
-    'The MAC address of %1$s (%2$s) appears to be randomly generated.', host.hostname, host.macAddress) + '<br><br>' +
+    'The MAC address of %1$s (%2$s) appears to be randomly generated.', escapeHTML(host.hostname), escapeHTML(host.macAddress)) + '<br><br>' +
     t('The Operating System may be using a random MAC address instead of the physical network card address.') + ' ' +
     t('Wake-on-LAN may be unable to wake up the machine since the MAC address does not match the one from the network card.');
 
@@ -2520,7 +2520,7 @@ function showApps(host) {
             // Create the game text placeholder that will contain the game name
             var gameText = $('<span>', {
               class: 'game-text',
-              html: app.title
+              text: app.title
             });
 
             // Append the game text to the game title wrapper
@@ -2678,7 +2678,7 @@ function quitAppDialog() {
       var quitAppDialog = document.querySelector('#quitAppDialog');
 
       // Change the dialog text element to include the game title
-      document.getElementById('quitAppDialogText').innerHTML = t('Are you sure you want to quit %1$s? All unsaved data will be lost.', currentGame.title);
+      document.getElementById('quitAppDialogText').innerHTML = t('Are you sure you want to quit %1$s? All unsaved data will be lost.', escapeHTML(currentGame.title));
       
       // Show the dialog and push the view
       quitAppOverlay.style.display = 'flex';
@@ -2784,7 +2784,7 @@ function startGame(host, appID) {
           var quitAppDialog = document.querySelector('#quitAppDialog');
 
           // Change the dialog text element to include the game title
-          document.getElementById('quitAppDialogText').innerHTML = t('%1$s is already running. Would you like to quit it and start %2$s?', currentApp.title, appToStart.title);
+          document.getElementById('quitAppDialogText').innerHTML = t('%1$s is already running. Would you like to quit it and start %2$s?', escapeHTML(currentApp.title), escapeHTML(appToStart.title));
 
           // Show the dialog and push the view
           quitAppOverlay.style.display = 'flex';
