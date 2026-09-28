@@ -32,6 +32,15 @@ const AsyncFunctions = {
 var callbacks = {}
 var callbacks_ids = 1;
 
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function normalizeBackendMessageText(text) {
   return String(text || '')
     .replace(/\\n/g, '\n')
