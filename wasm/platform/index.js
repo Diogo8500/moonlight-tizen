@@ -51,6 +51,8 @@ var repeatTimeout = null; // Flag indicating whether the repeat timeout is set, 
 var navigationTimeout = null; // Flag indicating whether the navigation timeout is set, initial value is null
 const BUILD_TYPE = '__BUILD_TYPE__'; // Placeholder for build type, which should be replaced during the build process
 const BUILD_COMMIT = '__BUILD_COMMIT__'; // Placeholder for build commit, which should be replaced during the build process
+const REPO_OWNER = '__REPO_OWNER__'; // Placeholder for repository owner, which should be replaced during the build process
+const REPO_NAME = '__REPO_NAME__'; // Placeholder for repository name, which should be replaced during the build process
 var _smartHubLocalMessagePort = null; // Local message port for receiving messages from the Smart Hub service
 var _smartHubMessagePortListener = null; // Listener ID for the Smart Hub local message port
 var _previewApps = {}; // Per-host app cache for Smart Hub Preview: {serverUid: {hostname, address, apps: [{id, title, imageUri}]}}
@@ -234,7 +236,7 @@ function getBuildVersion(version) {
   if (BUILD_TYPE === 'development' && BUILD_COMMIT) {
     return `${version} (pre-${BUILD_COMMIT})`;
   }
-  // Return only the version number without any additional metadata for production builds
+  // Return only the version number without any additional metadata for release builds
   return version;
 }
 
@@ -1807,9 +1809,7 @@ function navigationGuideDialog() {
 // Fetch the latest version and release notes from GitHub API
 function fetchLatestRelease() {
   // GitHub API endpoint to get the latest released version
-  const repoOwner = 'brightcraft';
-  const repoName = 'moonlight-tizen';
-  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+  const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`;
 
   // Fetch the latest release data from the GitHub API
   return fetch(apiUrl).then(response => {
