@@ -228,33 +228,29 @@ NvHTTP.prototype = {
   // Refreshes the server info using a given address. This is useful for testing whether we can successfully ping a host at a given address
   refreshServerInfoAtAddress: function(givenAddress) {
     var urlAddr = formatAddressForUrl(givenAddress);
-    if (this.ppkstr == null) {
+    // Unpaired hosts have no established certificate trust, so HTTP is allowed.
+    if (this.ppkstr == null) { // No pinned cert
       // Use HTTP if we have no pinned cert
       return this._openUrlWithTimeout('http://' + urlAddr + ':' + this.httpPort + '/serverinfo?' + this._buildUidStr(), this.ppkstr).then(function(retHttp) {
         var parsed = this._parseServerInfo(retHttp);
-        if (!parsed) return Promise.reject("Failed to parse server info from HTTP");
+        if (!parsed) { // If that fails
+          return Promise.reject("Failed to parse server info from HTTP");
+        }
         return parsed;
       }.bind(this));
     }
-    // Try HTTPS first
+    // Paired hosts must use HTTPS with the pinned certificate. Do not fall back to unauthenticated HTTP for server metadata.
     return this._openUrlWithTimeout('https://' + urlAddr + ':' + this.httpsPort + '/serverinfo?' + this._buildUidStr(), this.ppkstr).then(function(ret) {
-      if (!this._parseServerInfo(ret)) { // If that fails
-        console.error('%c[utils.js, refreshServerInfoAtAddress]', 'color: gray;', 'Error: Failed to parse server info from HTTPS, falling back to HTTP...');
-        // Try HTTP as a failover. Useful to clients who aren't paired yet
-        return this._openUrlWithTimeout('http://' + urlAddr + ':' + this.httpPort + '/serverinfo?' + this._buildUidStr(), this.ppkstr).then(function(retHttp) {
-          var parsed = this._parseServerInfo(retHttp);
-          if (!parsed) return Promise.reject("Failed to parse server info from HTTP");
-          return parsed;
-        }.bind(this));
+      var parsed = this._parseServerInfo(ret);
+      if (!parsed) { // If that fails
+        console.warn('%c[utils.js, refreshServerInfoAtAddress]', 'color: gray;', 'Warning: Failed to parse server info from HTTPS. Please verify the host is reachable and re-pair the host if necessary!');
+        return Promise.reject("Failed to parse server info from HTTPS");
       }
+      return parsed;
     }.bind(this), function(error) {
       if (error == -100) { // GS_CERT_MISMATCH
-        console.warn('%c[utils.js, refreshServerInfoAtAddress]', 'color: gray;', 'Warning: Certificate mismatch. Retrying over HTTP...', this);
-        return this._openUrlWithTimeout('http://' + urlAddr + ':' + this.httpPort + '/serverinfo?' + this._buildUidStr(), this.ppkstr).then(function(retHttp) {
-          var parsed = this._parseServerInfo(retHttp);
-          if (!parsed) return Promise.reject("Failed to parse server info from HTTP");
-          return parsed;
-        }.bind(this));
+        // Do not fall back to HTTP after a certificate mismatch. The endpoint must be re-paired before unauthenticated server metadata can be accepted.
+        console.error('%c[utils.js, refreshServerInfoAtAddress]', 'color: gray;', 'Error: Certificate mismatch. Please re-pair the host!', this);
       }
       return Promise.reject(error);
     }.bind(this));
