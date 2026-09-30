@@ -1,6 +1,5 @@
 // Initialize global variables and constants
 var appInfo = tizen.application.getAppInfo(); // Retrieve the application information
-var isForceGMVariant = checkForceGMVariant(); // Check if the currently installed app is the ForceGM variant
 var platformVer = tizen.systeminfo.getCapability("http://tizen.org/feature/platform.version"); // Retrieve the device platform version
 var modelSeries = webapis.productinfo.getModel(); // Retrieve the device model series
 var modelName = webapis.productinfo.getRealModel(); // Retrieve the device model name
@@ -213,6 +212,21 @@ function changeUiModeForWasmLoad() {
 
 function moduleDidLoad() {
   loadHTTPCerts();
+}
+
+// Check if the application is running in a forced Game Mode variant based on Tizen AppMetaData
+function checkForceGMVariant() {
+  try {
+    var metaData = tizen.application.getAppMetaData(appInfo.id);
+    // Check if the AppMetaData contains the key-value pair indicating forced Game Mode
+    if (metaData && metaData.some(m => m.key === 'http://samsung.com/tv/metadata/use.game.mode' && m.value === 'true')) {
+      return true;
+    }
+  } catch (error) {
+    console.warn('%c[index.js, checkForceGMVariant]', 'color: green;', 'Failed to probe AppMetaData for ForceGM check: ', error);
+  }
+  // Return false if the application is not running in a forced Game Mode variant
+  return false;
 }
 
 // Formats the build version string based on the build type and commit information
@@ -3682,21 +3696,10 @@ function initSpecialKeys() {
   });
 }
 
-function checkForceGMVariant() {
-  try {
-    var metaData = tizen.application.getAppMetaData(appInfo.id);
-    if (metaData && metaData.some(m => m.key === 'http://samsung.com/tv/metadata/use.game.mode' && m.value === 'true')) {
-      return true;
-    }
-  } catch (e) {
-    console.warn('%c[index.js, checkForceGMVariant]', 'color: green;', 'Failed to probe AppMetaData for ForceGM check:', e);
-  }
-  return false;
-}
-
 function loadSystemInfo() {
   console.log('%c[index.js, loadSystemInfo]', 'color: green;', 'Loading system information...');
   const systemInfoPlaceholder = document.getElementById('systemInfoBtn');
+  const isForceGMVariant = checkForceGMVariant(); // Check if the currently installed app is the ForceGM variant
   const buildVer = getBuildVersion(appInfo.version);
 
   // Get the system information from the TV
