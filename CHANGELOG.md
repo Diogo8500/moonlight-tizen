@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.17.2
+
+### Added
+- Added ForceGM variant detection to the System Info panel for easier identification
+
+### Changed
+- Improved build metadata injection in the Dockerfile for development and release builds
+- Prevented paired hosts from falling back to unauthenticated HTTP when refreshing server metadata
+
+### Fixed
+- Fixed a security vulnerability that allowed untrusted host metadata to be executed within the application
+
 ## v1.17.1
 
 ### Added
