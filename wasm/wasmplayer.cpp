@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "samsung/wasm/elementary_audio_track_config.h"
 #include "samsung/wasm/elementary_media_packet.h"
@@ -27,6 +28,7 @@ using HTMLAsyncResult = samsung::wasm::OperationResult;
 using TimeStamp = samsung::wasm::Seconds;
 
 static constexpr TimeStamp kFrameTimeMargin = 0.5ms;
+static constexpr TimeStamp kPacingSpinTime = 1ms;
 static constexpr TimeStamp kTimeWindow = 1s;
 static constexpr uint32_t kSampleRate = 48000;
 
@@ -413,6 +415,13 @@ int MoonlightInstance::VidDecSubmitDecodeUnit(PDECODE_UNIT decodeUnit) {
     TimeStamp fromStart = now - s_firstAppend;
     // Wait until the packet timestamp is within the frame time margin
     while (s_pktPts > fromStart - s_ptsDiff + kFrameTimeMargin) {
+      // Calculate the remaining wait time until the packet timestamp is within the frame time margin
+      TimeStamp waitTime = s_pktPts - (fromStart - s_ptsDiff + kFrameTimeMargin);
+      // Sleep through most of the wait to free up the CPU for the other streaming threads,
+      // and only spin for the final stretch in case the sleep wakes up late
+      if (waitTime > kPacingSpinTime) {
+        usleep(std::chrono::duration_cast<std::chrono::microseconds>(waitTime - kPacingSpinTime).count());
+      }
       // Update the current time and recalculate the elapsed time
       now = std::chrono::steady_clock::now();
       fromStart = now - s_firstAppend;
