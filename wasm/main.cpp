@@ -227,8 +227,9 @@ void* MoonlightInstance::ConnectionThreadFunc(void* context) {
     // render the longer frames that the RTSP negotiation may choose on low bitrate streams
     MoonlightInstance::s_ArCallbacks.capabilities |= CAPABILITY_SUPPORTS_ARBITRARY_AUDIO_DURATION;
     PostToJs("Selecting the audio renderer capabilities to: CAPABILITY_DIRECT_SUBMIT | CAPABILITY_SUPPORTS_ARBITRARY_AUDIO_DURATION");
-  } else { // EMSS
-    // The EMSS backend expects the fixed 5 ms frames that are negotiated without that capability
+  } else { // EMSS, or disabled audio output
+    // The EMSS backend expects the fixed 5 ms frames that are negotiated without that capability,
+    // and the frame duration doesn't matter when the audio output is disabled
     PostToJs("Selecting the audio renderer capabilities to: CAPABILITY_DIRECT_SUBMIT");
   }
 
@@ -320,6 +321,10 @@ MessageResult MoonlightInstance::StartStream(std::string host, int httpPort, std
     // Apply the appropriate value for the Web Audio backend
     m_AudioBackend = AudioBackend::WebAudio;
     PostToJs("Selecting the audio backend to: AUDIO_BACKEND_WEB_AUDIO");
+  } else if (audioBackend == "Disabled") { // No audio output
+    // Apply the appropriate value when the audio output is disabled
+    m_AudioBackend = AudioBackend::Disabled;
+    PostToJs("Selecting the audio backend to: AUDIO_BACKEND_DISABLED");
   } else { // Unknown
     // Default case for unsupported audio backend selection
     ClLogMessage("Unsupported audio backend '%s' detected! Reverting to the default backend...\n", audioBackend.c_str());

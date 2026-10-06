@@ -3504,7 +3504,11 @@ function saveAudioBackend() {
 // The audio backends do not share their tuning settings, so only show the settings that the
 // selected backend actually uses while streaming
 function updateAudioBackendSettings() {
-  if (isWebAudioBackendSelected()) {
+  if (isAudioOutputDisabled()) {
+    // Neither setting applies when the audio stream is discarded
+    $('#audioSyncOption').hide();
+    $('#audioJitterOption').hide();
+  } else if (isWebAudioBackendSelected()) {
     // The Web Audio backend schedules the audio itself using the jitter buffer
     $('#audioSyncOption').hide();
     $('#audioJitterOption').show();
@@ -3518,6 +3522,11 @@ function updateAudioBackendSettings() {
 // Check whether the Web Audio backend is the currently selected audio backend
 function isWebAudioBackendSelected() {
   return $('#selectAudioBackend').data('value') === 'WebAudio';
+}
+
+// Check whether the audio output is disabled in the audio backend setting
+function isAudioOutputDisabled() {
+  return $('#selectAudioBackend').data('value') === 'Disabled';
 }
 
 function saveAudioConfiguration() {
