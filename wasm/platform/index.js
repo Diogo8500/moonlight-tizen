@@ -3947,6 +3947,86 @@ function initSpecialKeys() {
   });
 }
 
+// Diagnostic build only: show key, visibility and gamepad events on screen
+function initKeyDiagnostics() {
+  var box = document.createElement('div');
+  box.id = 'keyDiagnostics';
+  box.style.cssText = 'position: fixed; top: 8px; left: 8px; z-index: 2147483647; pointer-events: none;' +
+    'background: rgba(0, 0, 0, 0.75); color: #0f0; font: 20px/1.3 monospace; padding: 8px 12px;' +
+    'white-space: pre; max-width: 95vw; overflow: hidden;';
+  document.body.appendChild(box);
+
+  var lines = [];
+  var startTime = Date.now();
+  function log(text) {
+    var seconds = ((Date.now() - startTime) / 1000).toFixed(2);
+    lines.push(seconds + 's  ' + text);
+    if (lines.length > 12) {
+      lines.shift();
+    }
+    box.textContent = lines.join('\n');
+  }
+
+  // Keyboard and remote keys, seen before any other handler
+  var keyDownTimes = {};
+  function logKey(e) {
+    var text = e.type + '  key=' + e.key + '  code=' + e.code + '  keyCode=' + e.keyCode + '  repeat=' + e.repeat;
+    if (e.type === 'keydown' && keyDownTimes[e.keyCode] === undefined) {
+      keyDownTimes[e.keyCode] = Date.now();
+    } else if (e.type === 'keyup') {
+      if (keyDownTimes[e.keyCode] !== undefined) {
+        text += '  held=' + (Date.now() - keyDownTimes[e.keyCode]) + 'ms';
+      }
+      delete keyDownTimes[e.keyCode];
+    }
+    log(text + '  inGame=' + isInGame);
+  }
+  window.addEventListener('keydown', logKey, true);
+  window.addEventListener('keyup', logKey, true);
+
+  // Shows whether a key sends the app to the background
+  document.addEventListener('visibilitychange', function() {
+    log('visibility=' + document.visibilityState);
+  });
+
+  // Media keys, each registered separately so one unsupported key doesn't stop the others
+  ['MediaPlayPause', 'MediaPlay', 'MediaPause', 'MediaStop', 'MediaRewind', 'MediaFastForward'].forEach(function(key) {
+    try {
+      tizen.tvinputdevice.registerKey(key);
+      log('registered ' + key);
+    } catch (err) {
+      log('failed to register ' + key + ': ' + err.name);
+    }
+  });
+
+  // Gamepad buttons, read-only polling next to the stream's own gamepad handling
+  var padIds = {};
+  var padButtons = {};
+  setInterval(function() {
+    var pads = navigator.getGamepads ? navigator.getGamepads() : [];
+    for (var i = 0; i < pads.length; i++) {
+      var pad = pads[i];
+      if (!pad) {
+        continue;
+      }
+      if (padIds[i] !== pad.id) {
+        padIds[i] = pad.id;
+        padButtons[i] = [];
+        log('pad ' + i + ': ' + pad.id + ' (' + pad.buttons.length + ' buttons, mapping=' + pad.mapping + ')');
+      }
+      for (var b = 0; b < pad.buttons.length; b++) {
+        var pressed = pad.buttons[b].pressed;
+        if (pressed !== !!padButtons[i][b]) {
+          padButtons[i][b] = pressed;
+          log('pad ' + i + ' button ' + b + (pressed ? ' down' : ' up'));
+        }
+      }
+    }
+  }, 50);
+
+  log('key diagnostics ready');
+}
+
 function loadSystemInfo() {
   console.log('%c[index.js, loadSystemInfo]', 'color: green;', 'Loading system information...');
   const systemInfoPlaceholder = document.getElementById('systemInfoBtn');
@@ -4720,6 +4800,7 @@ function onWindowLoad() {
 
   initSamsungKeys();
   initSpecialKeys();
+  initKeyDiagnostics();
   loadUserData();
 
   probeSmartHubSupport().then(function() {
