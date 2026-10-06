@@ -2913,7 +2913,7 @@ function startGame(host, appID) {
       '\n Audio synchronization: ' + audioSync + 
       '\n Audio jitter buffer: ' + audioJitter + ' ms' +
       '\n Play host audio: ' + playHostAudio + 
-      '\n Decrypt host audio (Punktfunk): ' + decryptHostAudio + 
+      '\n Decrypt host audio: ' + decryptHostAudio + 
       '\n Video codec: ' + videoCodec + 
       '\n Video HDR mode: ' + hdrMode + 
       '\n Full color range: ' + fullRange + 
@@ -2960,8 +2960,8 @@ function startGame(host, appID) {
             host.address, host.httpPort, streamWidth, streamHeight, frameRate, bitrate.toString(), rikey, rikeyid.toString(),
             host.appVersion, host.gfeVersion, $root.find('sessionUrl0').text().trim(), host.serverCodecModeSupport,
             framePacing, optimizeGames, rumbleFeedback, mouseEmulation, flipABfaceButtons, flipXYfaceButtons,
-            audioBackend, audioConfig, audioSync, audioJitter, playHostAudio, decryptHostAudio, videoCodec, hdrMode, fullRange, gameMode,
-            disableWarnings, performanceStats
+            audioBackend, audioConfig, audioSync, audioJitter, playHostAudio, decryptHostAudio, videoCodec, hdrMode, fullRange,
+            gameMode, disableWarnings, performanceStats
           ]);
         }, function(failedResumeApp) {
           console.error('%c[index.js, startGame]', 'color: green;', 'Error: Failed to resume app with id: ' + appID + '\n Returned error was: ' + failedResumeApp + '!');
@@ -3012,8 +3012,8 @@ function startGame(host, appID) {
           host.address, host.httpPort, streamWidth, streamHeight, frameRate, bitrate.toString(), rikey, rikeyid.toString(),
           host.appVersion, host.gfeVersion, $root.find('sessionUrl0').text().trim(), host.serverCodecModeSupport,
           framePacing, optimizeGames, rumbleFeedback, mouseEmulation, flipABfaceButtons, flipXYfaceButtons,
-          audioBackend, audioConfig, audioSync, audioJitter, playHostAudio, decryptHostAudio, videoCodec, hdrMode, fullRange, gameMode,
-          disableWarnings, performanceStats
+          audioBackend, audioConfig, audioSync, audioJitter, playHostAudio, decryptHostAudio, videoCodec, hdrMode, fullRange,
+          gameMode, disableWarnings, performanceStats
         ]);
       }, function(failedLaunchApp) {
         console.error('%c[index.js, startGame]', 'color: green;', 'Error: Failed to launch app with id: ' + appID + '\n Returned error was: ' + failedLaunchApp + '!');
@@ -3574,10 +3574,13 @@ function savePlayHostAudio() {
 function saveDecryptHostAudio() {
   setTimeout(() => {
     const chosenDecryptHostAudio = $('#decryptHostAudioSwitch').parent().hasClass('is-checked');
-    console.log('%c[index.js, saveDecryptHostAudio]', 'color: green;', 'Saving decrypt host audio (Punktfunk) state: ' + chosenDecryptHostAudio);
+    console.log('%c[index.js, saveDecryptHostAudio]', 'color: green;', 'Saving decrypt host audio state: ' + chosenDecryptHostAudio);
     storeData('decryptHostAudio', chosenDecryptHostAudio, null);
+
+    // Warning when enabling decrypt host audio for non-Wolf/Punktfunk-style hosts
     if (chosenDecryptHostAudio) {
-      snackbarLogLong('Warning: Enable Decrypt host audio only for Punktfunk-style hosts. Leave it off for Sunshine / GeForce Experience.');
+      // Show a warning message when enabling decrypt host audio
+      snackbarLogLong('Warning: Enable this only for Wolf or Punktfunk-style hosts, and leave it disabled for Sunshine or GameStream hosts to avoid audio streaming issues!');
     }
   }, 100);
 }

@@ -293,7 +293,7 @@ MessageResult MoonlightInstance::StartStream(std::string host, int httpPort, std
   PostToJs("Setting the Audio synchronization to: " + std::to_string(audioSync));
   PostToJs("Setting the Audio jitter buffer to: " + std::to_string(audioJitterMs) + " ms");
   PostToJs("Setting the Play host audio to: " + std::to_string(playHostAudio));
-  PostToJs("Setting the Decrypt host audio (Punktfunk) to: " + std::to_string(decryptHostAudio));
+  PostToJs("Setting the Decrypt host audio to: " + std::to_string(decryptHostAudio));
   PostToJs("Setting the Video codec to: " + videoCodec);
   PostToJs("Setting the Video HDR mode to: " + std::to_string(hdrMode));
   PostToJs("Setting the Full color range to: " + std::to_string(fullRange));
@@ -386,8 +386,7 @@ MessageResult MoonlightInstance::StartStream(std::string host, int httpPort, std
   // Apply the desired color range ​based on the toggle switch state
   m_StreamConfig.colorRange |= fullRange ? COLOR_RANGE_FULL : COLOR_RANGE_LIMITED;
 
-  // Apply ENCFLG_AUDIO only when Decrypt host audio (Punktfunk) is enabled; keep ENCFLG_NONE
-  // for Sunshine / GeForce Experience (Punktfunk encrypts audio without advertising SS_ENC_AUDIO)
+  // Apply encryption audio only when decrypt host audio is enabled, otherwise disable encryption
   m_StreamConfig.encryptionFlags = decryptHostAudio ? ENCFLG_AUDIO : ENCFLG_NONE;
 
   // Load the rikey and rikeyid into the stream configuration
@@ -425,6 +424,7 @@ MessageResult MoonlightInstance::StartStream(std::string host, int httpPort, std
   m_AudioSyncEnabled = audioSync;
   m_AudioJitterMs = audioJitterMs;
   m_PlayHostAudioEnabled = playHostAudio;
+  m_DecryptHostAudioEnabled = decryptHostAudio;
   m_HdrModeEnabled = hdrMode;
   m_FullRangeEnabled = fullRange;
   m_GameModeEnabled = gameMode;
@@ -633,8 +633,8 @@ MessageResult startStream(std::string host, int httpPort, std::string width, std
   std::string videoCodec, bool hdrMode, bool fullRange, bool gameMode, bool disableWarnings, bool performanceStats) {
   PostToJs("Starting the streaming session...");
   return g_Instance->StartStream(host, httpPort, width, height, fps, bitrate, rikey, rikeyid, appversion, gfeversion, rtspurl, serverCodecModeSupport,
-  framePacing, optimizeGames, rumbleFeedback, mouseEmulation, flipABfaceButtons, flipXYfaceButtons, audioBackend, audioConfig,
-  audioSync, audioJitterMs, playHostAudio, decryptHostAudio, videoCodec, hdrMode, fullRange, gameMode, disableWarnings, performanceStats);
+  framePacing, optimizeGames, rumbleFeedback, mouseEmulation, flipABfaceButtons, flipXYfaceButtons, audioBackend, audioConfig, audioSync,
+  audioJitterMs, playHostAudio, decryptHostAudio, videoCodec, hdrMode, fullRange, gameMode, disableWarnings, performanceStats);
 }
 
 MessageResult stopStream() {
