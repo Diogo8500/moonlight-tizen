@@ -1,0 +1,53 @@
+# This workflow builds the application for every pull request to check that it still compiles and packages successfully, and uploads the resulting widget file so the changes can be tested on a TV without building them locally.
+name: Build (Pull Request)
+# Configure this workflow to be triggered when a pull request targeting the `master` branch is opened or updated, unless it only changes documentation.
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancels a build that is still running for the same pull request when a newer commit is pushed to it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+# By specifying the access of one of the scopes, all of those that are not specified are set to 'none'.
+permissions:
+  contents: read
+# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # This job checks out the code, builds the Docker image without pushing it anywhere, and extracts the widget file from it.
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      # This step uses the `docker/build-push-action` action to build the Standard variant from the repository's `Dockerfile`, which compiles and packages the application.
+      # It uses the `push` parameter set to false, so nothing is published, and the `load` parameter so the image can be used by the next step.
+      # It uses the `build-args` parameter to build a development build, which shows the short commit SHA in the application.
+      - name: Build Docker image (Standard variant)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          load: true
+          build-args: |
+            BUILD_TYPE=development
+            REPO_OWNER=${{ github.repository_owner }}
+            REPO_NAME=${{ github.event.repository.name }}
+            FORCE_GAME_MODE=false
+          tags: moonlight-tizen:pull-request
+      # Copies the built widget file out of the Docker image.
+      - name: Copy widget file from Docker image
+        run: |
+          docker create --name temp_container moonlight-tizen:pull-request
+          docker cp temp_container:/home/moonlight/Moonlight.wgt .
+          docker rm temp_container
+      # Uploads the widget file as a workflow artifact, so it can be downloaded from the workflow run and installed on a TV for testing.
+      - name: Upload widget file
+        uses: actions/upload-artifact@v7
+        with:
+          name: Moonlight-PR${{ github.event.pull_request.number }}
+          path: Moonlight.wgt
+          retention-days: 14
