@@ -1,3 +1,4 @@
+#error "Deliberate build failure to test the pull request build check"
 #include "moonlight_wasm.hpp"
 
 #include <pthread.h>
