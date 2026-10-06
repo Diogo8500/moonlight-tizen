@@ -85,7 +85,8 @@ enum class LoadResult {
 // Audio backend used to render the decoded Opus stream
 enum class AudioBackend {
   Emss, // Elementary Media Stream Source: the original Samsung implementation
-  WebAudio // Web Audio: the scheduler implemented in platform/audio.js
+  WebAudio, // Web Audio: the scheduler implemented in platform/audio.js
+  Disabled // No audio output: the audio stream is discarded, for setups that play it through another device
 };
 
 constexpr const char* kCanvasName = "#wasm_module";
