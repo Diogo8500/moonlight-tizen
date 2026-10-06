@@ -1274,7 +1274,8 @@ const Views = {
       // At most one of these settings is shown at a time, as each one belongs to a single backend,
       // and neither is shown when the audio output is disabled
       isAudioOutputDisabled() ? null : isWebAudioBackendSelected() ? 'selectAudioJitter' : 'audioSyncBtn',
-      'playHostAudioBtn'
+      'playHostAudioBtn',
+      'decryptHostAudioBtn'
     ].filter(Boolean)),
     up: function() {
       this.view.prevOption();
