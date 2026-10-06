@@ -11,9 +11,11 @@ This application allows you to stream your collection of games, programs, or you
 
 > [!NOTE]
 >
-> Currently, as an active maintainer with **limited time to work** on this project, my personal focus is primarily on addressing critical issues and integrating community contributions, with necessary improvements or new features **occurring only as my schedule permits**.
+> While I am still actively maintaining the project and doing my best with my **limited time**, I want to let you all know that I am focused on pushing the remaining improvements and new features, including the integration of community contributions. This is also why the project has continued to be **actively updated and receive frequent releases** in recent months.
 >
-> Since the core functionality is now almost fully implemented, the project is gradually moving into its **final maintenance phase**. Moving forward, you can expect developments on my part to be slower and responses to support requests to be delayed.
+> At this stage, the core functionality is now considered **fully implemented**, and the project has reached a **mature and stable state** as it approaches the end of its active development period. Given this progress, **this will most likely be my final year** of actively maintaining and developing it, and I intend to use this time to complete the work that can still be done before this transition takes place.
+>
+> Over the coming months, likely towards the end of the year, I will make a **final announcement** with more details about this transition and what it will mean for the project and its future.
 
 ---
 
@@ -41,7 +43,7 @@ Preparing Moonlight for installation is a straightforward process, although the 
 For in-depth guides, technical support, and comprehensive documentation, please refer to the [Wiki](https://github.com/brightcraft/moonlight-tizen/wiki) or jump directly to a relevant section below:
 - 🚀 Install the app step-by-step: [Installation Guide](https://github.com/brightcraft/moonlight-tizen/wiki/Installation-Guide)
 - 🔄 Update your application version: [Updating Guide](https://github.com/brightcraft/moonlight-tizen/wiki/Updating-Guide)
-- ✨ Explore available app features: [Feature Overview](https://github.com/brightcraft/moonlight-tizen/wiki/Feature-Overview)
+- ✨ Explore available app features: [Features Overview](https://github.com/brightcraft/moonlight-tizen/wiki/Features-Overview)
 - ❓ Common questions and tips: [Frequently Asked Questions](https://github.com/brightcraft/moonlight-tizen/wiki/Frequently-Asked-Questions)
 - ⚠️ Review limitations and notes: [Known Issues & Limitations](https://github.com/brightcraft/moonlight-tizen/wiki/Known-Issues-&-Limitations)
 - 🔮 Instructions for building the app: [Development Guide](https://github.com/brightcraft/moonlight-tizen/wiki/Development-Guide)
