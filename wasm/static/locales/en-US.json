@@ -53,7 +53,7 @@
   "Flip X/Y face buttons": "Flip X/Y face buttons",
   "Swap X and Y face buttons on the gamepad while streaming": "Swap X and Y face buttons on the gamepad while streaming",
   "Audio backend": "Audio backend",
-  "- Choose EMSS for the original implementation, Web Audio if you hear crackling or stuttering while streaming, or Disabled to turn audio off (it will still play on the host if that option is enabled).": "- Choose EMSS for the original implementation, Web Audio if you hear crackling or stuttering while streaming, or Disabled to turn audio off (it will still play on the host if that option is enabled).",
+  "- Choose EMSS for the original implementation or Web Audio if you hear crackling or stuttering while streaming.": "- Choose EMSS for the original implementation or Web Audio if you hear crackling or stuttering while streaming.",
   "EMSS": "EMSS",
   "Web Audio": "Web Audio",
   "Disabled": "Disabled",
