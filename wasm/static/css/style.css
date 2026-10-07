@@ -227,6 +227,14 @@ body {
     border-radius: 16px;
     box-shadow: 0 0 12px 6px rgba(0, 163, 198, 1);
 }
+/* Size the Stream Menu to its options instead of the screen height */
+#streamMenuDialog {
+    height: fit-content;
+}
+/* Hide the mouse pointer around the Stream Menu, which appears when the mouse is released */
+#streamMenuDialogOverlay, #streamMenuDialog::backdrop {
+    cursor: none;
+}
 .mdl-dialog__title {
     margin: 0;
     padding: 24px 24px 14px;

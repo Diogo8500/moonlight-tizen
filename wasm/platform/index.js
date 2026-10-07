@@ -3193,6 +3193,13 @@ function streamMenuDialog() {
     dialogPolyfill.registerDialog(streamMenuDialog[0]);
   }
 
+  // Release the mouse while the dialog is open, otherwise the 'Back' key releases the mouse instead of closing the dialog
+  if (document.pointerLockElement) {
+    document.exitPointerLock();
+  }
+  // Ignore the mouse movement while the dialog is open, since releasing the mouse moves the pointer and removes the focus from the dialog
+  window.addEventListener('mousemove', stopMouseMovePropagation, true);
+
   // Show the dialog, start on the first option, and enable the navigation while the dialog is open
   $(streamMenuDialogOverlay).css('display', 'flex');
   streamMenuDialog[0].showModal();
@@ -3212,6 +3219,7 @@ function closeStreamMenuDialog(returnToStream) {
 
   Navigation.pop();
   Navigation.stop();
+  window.removeEventListener('mousemove', stopMouseMovePropagation, true);
   $('#streamMenuDialog')[0].close();
   streamMenuDialogOverlay.remove();
   isDialogOpen = false;
@@ -3227,6 +3235,11 @@ function closeStreamMenuDialog(returnToStream) {
       }));
     }
   }
+}
+
+// Stop a mouse movement event before it reaches the navigation and the streaming session
+function stopMouseMovePropagation(e) {
+  e.stopPropagation();
 }
 
 // Open or close the Stream Menu dialog while the video stream is displayed
