@@ -56,6 +56,7 @@
   "- Choose EMSS for the original implementation or Web Audio if you hear crackling or stuttering while streaming.": "- Choose EMSS for the original implementation or Web Audio if you hear crackling or stuttering while streaming.",
   "EMSS": "EMSS",
   "Web Audio": "Web Audio",
+  "Disabled": "Disabled",
   "Audio configuration": "Audio configuration",
   "Experimental": "Experimental",
   "- Choose 5.1 or 7.1 surround sound for home-theater systems or use Stereo for general audio compatibility.": "- Choose 5.1 or 7.1 surround sound for home-theater systems or use Stereo for general audio compatibility.",

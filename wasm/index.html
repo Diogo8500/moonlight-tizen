@@ -286,9 +286,10 @@
               <ul class="audioBackendMenu mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="selectAudioBackend">
                 <li class="mdl-menu__item" data-value="EMSS" data-i18n="EMSS">EMSS</li>
                 <li class="mdl-menu__item" data-value="WebAudio" data-i18n="Web Audio">Web Audio</li>
+                <li class="mdl-menu__item" data-value="Disabled" data-i18n="Disabled">Disabled</li>
               </ul>
             </div>
-            <div class="setting-option">
+            <div id="audioConfigOption" class="setting-option">
               <label><span data-i18n="Audio configuration">Audio configuration</span>
                 <span class="badge badge-experimental" data-i18n="Experimental">Experimental</span>
               </label>
@@ -344,7 +345,7 @@
                 </label>
               </div>
             </div>
-            <div class="setting-option">
+            <div id="decryptHostAudioOption" class="setting-option">
               <label>
                 <span data-i18n="Decrypt host audio">Decrypt host audio</span>
                 <span class="badge badge-experimental" data-i18n="Experimental">Experimental</span>

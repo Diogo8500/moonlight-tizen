@@ -3504,23 +3504,41 @@ function saveAudioBackend() {
   updateAudioBackendSettings();
 }
 
-// The audio backends do not share their tuning settings, so only show the settings that the
-// selected backend actually uses while streaming
+// The audio backends do not share their tuning settings, so only show the
+// settings that the selected backend actually uses while streaming
 function updateAudioBackendSettings() {
-  if (isWebAudioBackendSelected()) {
-    // The Web Audio backend schedules the audio itself using the jitter buffer
+  // Check if the audio output is disabled in the audio backend setting
+  if (isAudioOutputDisabled()) {
+    // Neither setting applies when the audio stream is discarded
+    $('#audioConfigOption').hide();
     $('#audioSyncOption').hide();
-    $('#audioJitterOption').show();
-  } else {
-    // The EMSS backend drops audio packets to stay in sync instead of buffering them
     $('#audioJitterOption').hide();
-    $('#audioSyncOption').show();
+    $('#decryptHostAudioOption').hide();
+  } else {
+    // These two settings apply to all active backends, so show them normally
+    $('#audioConfigOption').show();
+    $('#decryptHostAudioOption').show();
+    // Check which backend is selected and show the appropriate setting for that backend
+    if (isWebAudioBackendSelected()) {
+      // The Web Audio backend schedules the audio itself using the jitter buffer
+      $('#audioSyncOption').hide();
+      $('#audioJitterOption').show();
+    } else {
+      // The EMSS backend drops audio packets to stay in sync instead of buffering them
+      $('#audioJitterOption').hide();
+      $('#audioSyncOption').show();
+    }
   }
 }
 
 // Check whether the Web Audio backend is the currently selected audio backend
 function isWebAudioBackendSelected() {
   return $('#selectAudioBackend').data('value') === 'WebAudio';
+}
+
+// Check whether the audio output is disabled in the audio backend setting
+function isAudioOutputDisabled() {
+  return $('#selectAudioBackend').data('value') === 'Disabled';
 }
 
 function saveAudioConfiguration() {
