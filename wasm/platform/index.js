@@ -619,7 +619,7 @@ function hostChosen(host, onSuccessCallback) {
     }, function() {
       // Reset the flag to indicate that a host failed due to unsuccessful pairing
       isHostOpening = false;
-      // Start polling the host after pairing flow
+      // Resume background polling after the pairing flow
       startPollingHosts();
     });
   } else {
@@ -912,7 +912,7 @@ function addHostDialog() {
       addHostDialog.close();
       isDialogOpen = false;
       Navigation.pop();
-      // Avoid delay from other polling during pairing, and start polling the hosts again after the pairing flow
+      // Avoid delay from other polling during pairing
       stopPollingHosts();
       // Check if we already have record of this host. If so, we'll
       // need the PPK string to ensure our pairing status is accurate.
@@ -924,15 +924,19 @@ function addHostDialog() {
         // Use the host in the array directly to ensure the PPK propagates after pairing
         pairingDialog(hosts[_nvhttpHost.serverUid], function() {
           saveHosts();
+        }, function() {
+          // Resume background polling after the pairing flow
           startPollingHosts();
-        }, startPollingHosts);
+        });
       } else {
         pairingDialog(_nvhttpHost, function() {
-          // Host must be in the grid before starting background polling
+          // Add the host to the grid after successful pairing
           addHostToGrid(_nvhttpHost);
           saveHosts();
+        }, function() {
+          // Resume background polling after the pairing flow
           startPollingHosts();
-        }, startPollingHosts);
+        });
       }
       // Re-enable the Continue button after successful processing
       $('#continueAddHost').removeClass('mdl-button--disabled').prop('disabled', false);
