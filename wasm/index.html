@@ -168,6 +168,20 @@
               <ul class="languageMenu mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="selectLanguage"></ul>
             </div>
             <div class="setting-option">
+              <label data-i18n="Dark mode">Dark mode</label>
+              <span class="mdl-list__item-text-body" data-i18n="- Changes the interface colors from the default blue theme to a dark grey theme.">
+                - Changes the interface colors from the default blue theme to a dark grey theme.
+              </span>
+              <div id="darkModeMenu">
+                <label id="darkModeBtn" class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="darkModeSwitch">
+                  <input type="checkbox" id="darkModeSwitch" class="mdl-switch__input" onchange="handleDarkMode()">
+                  <span class="mdl-switch__label" data-i18n="Use dark grey colors for the interface">
+                    Use dark grey colors for the interface
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="setting-option">
               <label data-i18n="Host address field mode">Host address field mode</label>
               <span class="mdl-list__item-text-body" data-i18n="- Recommended for devices that have issues with the TV keyboard when entering the host address.">
                 - Recommended for devices that have issues with the TV keyboard when entering the host address.

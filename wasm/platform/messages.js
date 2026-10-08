@@ -251,7 +251,7 @@ function handleMessage(msg) {
     // Remove the video stream now
     $('#listener').removeClass('fullscreen');
     $('#loadingSpinner').css('display', 'none');
-    $('body').css('backgroundColor', '#282C38');
+    $('body').css('backgroundColor', 'var(--background-color)');
     $('#wasm_module').css('display', 'none');
     // Show a termination snackbar message if the termination was unexpected
     var errorCode = parseInt(msg.replace('streamTerminated: ', ''));

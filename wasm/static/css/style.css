@@ -1,9 +1,37 @@
 /* =============================
+   Color Theme
+============================= */
+/* Default colors of the interface */
+:root {
+    --background-color: #282C38; /* Page background */
+    --surface-color: #333846; /* Header, dialogs and menus */
+    --raised-color: #404354; /* Buttons, badges and dropdowns */
+    --card-color: #3E4454; /* Host cards and tooltips */
+    --snackbar-color: rgba(62, 68, 84, 0.9); /* Snackbar messages */
+    --hover-color: #484C5F; /* Hovered menu items and settings categories */
+    --input-color: #585D75; /* Text and select fields */
+    --disabled-color: #838593; /* Disabled buttons */
+    --disabled-active-color: #666875; /* Pressed disabled buttons and unsupported options */
+}
+/* Dark mode colors of the interface, based on Google's dark grey theme */
+:root.dark-mode {
+    --background-color: #1A1B1D;
+    --surface-color: #28292C;
+    --raised-color: #34373A;
+    --card-color: #34373A;
+    --snackbar-color: rgba(52, 55, 58, 0.9);
+    --hover-color: #424548;
+    --input-color: #55595D;
+    --disabled-color: #74797E;
+    --disabled-active-color: #55595D;
+}
+
+/* =============================
    Global Styles
 ============================= */
 body {
     color: #fff;
-    background-color: #282C38;
+    background-color: var(--background-color);
     font-family: 'Roboto', sans-serif;
     scroll-behavior: smooth;
     -webkit-user-select: none;
@@ -75,7 +103,7 @@ body {
    Header Section
 ============================= */
 #main-header {
-    background-color: #333846;
+    background-color: var(--surface-color);
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 1);
 }
 .mdl-layout__header-row {
@@ -101,7 +129,7 @@ body {
    Navigation Menu
 ============================= */
 #settingsBtn, #supportBtn, #restoreDefaultsBtn, #quitRunningAppBtn {
-    background-color: #404354;
+    background-color: var(--raised-color);
     width: 50px;
     height: 50px;
     margin: 0 10px;
@@ -109,7 +137,7 @@ body {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 #goBackBtn {
-    background-color: #404354;
+    background-color: var(--raised-color);
     position: fixed;
     left: 30px;
     width: 50px;
@@ -118,7 +146,7 @@ body {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 #updateAppBtn {
-    background-color: #404354;
+    background-color: var(--raised-color);
     right: 52px;
     height: 50px;
     padding: 0 20px;
@@ -129,7 +157,7 @@ body {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 #updateAppBtn:hover, #updateAppBtn:focus {
-    background-color: #404354;
+    background-color: var(--raised-color);
     box-shadow: 0 0 2px 3px rgba(239, 191, 4, 1);
 }
 #updateAppBtnText {
@@ -156,7 +184,7 @@ body {
     display: none;
 }
 .mdl-snackbar {
-    background: rgba(62, 68, 84, 0.9);
+    background: var(--snackbar-color);
     min-width: 0;
     border-radius: 12px 12px 0 0;
     box-shadow: 0 0 8px 4px rgba(0, 163, 198, 1);
@@ -172,7 +200,7 @@ body {
 }
 .mdl-tooltip {
     color: #fff;
-    background-color: #3E4454;
+    background-color: var(--card-color);
     display: inline !important;
     position: fixed;
     top: 72px !important;
@@ -211,7 +239,7 @@ body {
 }
 .mdl-dialog {
     color: #fff;
-    background-color: #333846;
+    background-color: var(--surface-color);
     width: 30%;
     height: auto;
     padding: 20px;
@@ -220,7 +248,7 @@ body {
 }
 .large-dialog {
     color: #fff;
-    background-color: #333846;
+    background-color: var(--surface-color);
     width: 90%;
     height: auto;
     padding: 20px;
@@ -281,7 +309,7 @@ body {
 }
 .mdl-textfield__input.hovered, #ipAddressTextInput {
     color: #fff;
-    background-color: #585D75;
+    background-color: var(--input-color);
 }
 .mdl-textfield__input.hovered, .mdl-textfield__input:hover, .mdl-textfield__input:focus {
     box-shadow: 0 0 1px 2px rgba(0, 163, 198, 1);
@@ -326,7 +354,7 @@ body {
 .ip-address-select-field.hovered, #ipAddressField1,
 #ipAddressField2, #ipAddressField3, #ipAddressField4 {
     color: #fff;
-    background-color: #585D75;
+    background-color: var(--input-color);
 }
 .ip-address-select-field.hovered, .ip-address-select-field:hover {
     box-shadow: 0 0 1px 2px rgba(0, 163, 198, 1);
@@ -479,7 +507,7 @@ body {
 }
 #continueAddHost[disabled], #continueAddHost.mdl-button--disabled {
     color: #fff;
-    background-color: #838593 !important;
+    background-color: var(--disabled-color) !important;
     pointer-events: auto;
     cursor: not-allowed;
 }
@@ -487,7 +515,7 @@ body {
 #continueAddHost[disabled]:focus, #continueAddHost[disabled]:active,
 #continueAddHost.mdl-button--disabled:hover, #continueAddHost.mdl-button--disabled:focus,
 #continueAddHost.mdl-button--disabled:active {
-    background-color: #666875 !important;
+    background-color: var(--disabled-active-color) !important;
     box-shadow: 0 0 2px 3px rgba(170, 170, 170, 1) !important;
     cursor: not-allowed;
 }
@@ -557,11 +585,11 @@ body {
 }
 .host-add-container > .mdl-card__title {
     color: #fff;
-    background: url('../res/ic_add_to_queue_white_48px.svg') center no-repeat rgba(62, 68, 84, 1);
+    background: url('../res/ic_add_to_queue_white_48px.svg') center no-repeat var(--card-color);
 }
 .host-container > .mdl-card__title {
     color: #fff;
-    background: url('../res/ic_tv_white_48px.svg') center no-repeat rgba(62, 68, 84, 1);
+    background: url('../res/ic_tv_white_48px.svg') center no-repeat var(--card-color);
 }
 #addHostContainer .host-title {
     text-transform: uppercase;
@@ -785,7 +813,7 @@ body {
     cursor: pointer;
 }
 .settings-category.hovered, .settings-category:hover, .settings-category:focus {
-    background-color: #484C5F;
+    background-color: var(--hover-color);
     box-shadow: 0 0 2px 3px rgba(0, 163, 198, 0.8);
 }
 .settings-category.selected {
@@ -865,7 +893,7 @@ body {
     background-color: #fff;
 }
 .mdl-switch.is-focused {
-    background-color: #404354;
+    background-color: var(--raised-color);
     box-shadow: 0 0 2px 3px rgba(0, 163, 198, 1);
 }
 .mdl-icon-toggle__label.material-icons {
@@ -881,11 +909,11 @@ body {
 }
 .mdl-button--raised.mdl-button--colored {
     color: #fff;
-    background-color: #404354 !important;
+    background-color: var(--raised-color) !important;
 }
 .mdl-button--raised.mdl-button--colored:hover, .mdl-button--raised.mdl-button--colored:focus,
 .mdl-button--raised.mdl-button--colored:active {
-    background-color: #404354 !important;
+    background-color: var(--raised-color) !important;
     box-shadow: 0 0 2px 3px rgba(0, 163, 198, 1);
 }
 .mdl-button--raised.mdl-button--colored[disabled] {
@@ -930,17 +958,17 @@ body {
 }
 .badge-new {
     color: #76FF7A;
-    background-color: #404354;
+    background-color: var(--raised-color);
     border: 1px solid #76FA20;
 }
 .badge-preview {
   color: #E0C3FC;
-  background-color: #404354;
+  background-color: var(--raised-color);
   border: 1px solid #B388FF;
 }
 .badge-experimental {
     color: #FFC046;
-    background-color: #404354;
+    background-color: var(--raised-color);
     border: 1px solid #FFA620;
 }
 #selectResolution, #selectFramerate, #selectBitrate, #selectLanguage, #removeAllHostsBtn,
@@ -950,14 +978,14 @@ body {
     letter-spacing: 0.5px;
     text-indent: 36px;
 }
-#selectResolution, #selectFramerate, #selectBitrate, #framePacingBtn, #selectLanguage, #ipAddressFieldModeBtn,
+#selectResolution, #selectFramerate, #selectBitrate, #framePacingBtn, #selectLanguage, #darkModeBtn, #ipAddressFieldModeBtn,
 #sortAppsListBtn, #optimizeGamesBtn, #removeAllHostsBtn, #rumbleFeedbackBtn, #mouseEmulationBtn,
 #flipABfaceButtonsBtn, #flipXYfaceButtonsBtn, #selectAudioBackend, #selectAudio, #audioSyncBtn,
 #selectAudioJitter, #playHostAudioBtn, #decryptHostAudioBtn,
 #selectCodec, #hdrModeBtn, #fullRangeBtn, #gameModeBtn, #unlockAllFpsBtn, #optimizeBitrateBtn,
 #disableWarningsBtn, #performanceStatsBtn, #navigationGuideBtn, #checkUpdatesBtn, #restartAppBtn {
     color: #ececec;
-    background-color: #404354;
+    background-color: var(--raised-color);
     width: 100%;
     height: 60px;
     border-radius: 8px;
@@ -967,7 +995,7 @@ body {
 }
 #systemInfoBtn {
     color: #ececec;
-    background-color: #404354;
+    background-color: var(--raised-color);
     width: 100%;
     height: 100%;
     padding: 15px 50px 20px 50px;
@@ -986,7 +1014,7 @@ body {
 .unsupported-resolution[disabled].hovered, .unsupported-resolution[disabled]:hover,
 .unsupported-resolution[disabled]:focus, .unsupported-resolution[disabled]:active {
 	color: #dedede !important;
-    background-color: #666875 !important;
+    background-color: var(--disabled-active-color) !important;
 }
 #gameModeBtn.is-disabled.hovered, #gameModeBtn.is-disabled:hover,
 #gameModeBtn.is-disabled:focus, #gameModeBtn.is-disabled:active {
@@ -995,7 +1023,7 @@ body {
 }
 .mdl-menu__outline {
     color: #fff;
-    background-color: #333846;
+    background-color: var(--surface-color);
 }
 .mdl-menu__item {
     color: #ececec;
@@ -1005,7 +1033,7 @@ body {
     text-align: left;
 }
 .mdl-menu__item.hovered, .mdl-menu__item:hover, .mdl-menu__item:focus {
-    background-color: #484C5F;
+    background-color: var(--hover-color);
 }
 .videoResolutionMenu, .videoFramerateMenu, .videoBitrateMenu,
 .languageMenu, .audioBackendMenu, .audioConfigMenu, .audioJitterMenu,
@@ -1020,7 +1048,7 @@ body {
     border-radius: 0 0 8px 8px;
 }
 .videoBitrateMenu, .audioJitterMenu {
-    background-color: #333846;
+    background-color: var(--surface-color);
     display: flex;
     align-items: center;
 }
@@ -1049,7 +1077,7 @@ body {
 }
 #bitrateLowestValue.hovered, #bitrateHighestValue.hovered,
 #jitterLowestValue.hovered, #jitterHighestValue.hovered {
-    background-color: #333846;
+    background-color: var(--surface-color);
 }
 .dropdown-items {
     float: right;
@@ -1060,7 +1088,7 @@ body {
 #audioBackendMenu > #selectAudioBackend, #audioConfigMenu > #selectAudio,
 #audioJitterMenu > #selectAudioJitter, #videoCodecMenu > #selectCodec {
     color: #ececec;
-    background: url('../res/ic_arrow_drop_down_48px.svg') 94.8% 50% no-repeat rgba(64, 67, 84, 1);
+    background: url('../res/ic_arrow_drop_down_48px.svg') 94.8% 50% no-repeat var(--raised-color);
 }
 #removeAllHostsIcon, #navigationGuideIcon, #checkUpdatesIcon,
 #restartApplicationIcon {
@@ -1082,7 +1110,7 @@ body {
 #continueExitApp:focus, #cancelExitApp:hover, #cancelExitApp:focus, #settingsBtn:hover, #settingsBtn:focus, #supportBtn:hover, #supportBtn:focus,
 #goBackBtn:hover, #goBackBtn:focus, #restoreDefaultsBtn:hover, #restoreDefaultsBtn:focus, #quitRunningAppBtn:hover, #quitRunningAppBtn:focus,
 #selectResolution:hover, #selectResolution:focus, #selectFramerate:hover, #selectFramerate:focus, #selectBitrate:hover, #selectBitrate:focus,
-#framePacingBtn:hover, #framePacingBtn:focus, #selectLanguage:hover, #selectLanguage:focus, #ipAddressFieldModeBtn:hover, #ipAddressFieldModeBtn:focus, #sortAppsListBtn:hover,
+#framePacingBtn:hover, #framePacingBtn:focus, #selectLanguage:hover, #selectLanguage:focus, #darkModeBtn:hover, #darkModeBtn:focus, #ipAddressFieldModeBtn:hover, #ipAddressFieldModeBtn:focus, #sortAppsListBtn:hover,
 #sortAppsListBtn:focus, #optimizeGamesBtn:hover, #optimizeGamesBtn:focus, #removeAllHostsBtn:hover, #removeAllHostsBtn:focus, #rumbleFeedbackBtn:hover,
 #rumbleFeedbackBtn:focus, #mouseEmulationBtn:hover, #mouseEmulationBtn:focus, #flipABfaceButtonsBtn:hover, #flipABfaceButtonsBtn:focus,
 #flipXYfaceButtonsBtn:hover, #flipXYfaceButtonsBtn:focus, #selectAudioBackend:hover, #selectAudioBackend:focus, #selectAudio:hover,
@@ -1092,7 +1120,7 @@ body {
 #optimizeBitrateBtn:focus, #disableWarningsBtn:hover, #disableWarningsBtn:focus, #performanceStatsBtn:hover, #performanceStatsBtn:focus,
 #systemInfoBtn:hover, #systemInfoBtn:focus, #navigationGuideBtn:hover, #navigationGuideBtn:focus, #checkUpdatesBtn:hover, #checkUpdatesBtn:focus,
 #restartAppBtn:hover, #restartAppBtn:focus {
-    background-color: #404354;
+    background-color: var(--raised-color);
     box-shadow: 0 0 2px 3px rgba(0, 163, 198, 1);
 }
 /* =============================

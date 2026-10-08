@@ -103,6 +103,7 @@ function attachListeners() {
   $('.videoFramerateMenu li').on('click', saveFramerate);
   $('#bitrateSlider').on('input', saveBitrate);
   $('#framePacingSwitch').on('click', saveFramePacing);
+  $('#darkModeSwitch').on('click', saveDarkMode);
   $('#ipAddressFieldModeSwitch').on('click', saveIpAddressFieldMode);
   $('#ipAddressTextInput').on('input', updateIpAddressInputValidationState);
   $('#sortAppsListSwitch').on('click', saveSortAppsList);
@@ -483,7 +484,7 @@ function showHosts() {
 
     // Show the main header after the loading screen is complete
     $('#main-header').children().show();
-    $('#main-header').css({'backgroundColor': '#333846', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
+    $('#main-header').css({'backgroundColor': 'var(--surface-color)', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
 
     // Navigate to the Hosts view
     showHostsMode();
@@ -634,6 +635,12 @@ function hostChosen(host, onSuccessCallback) {
       isHostOpening = false;
     });
   }
+}
+
+// Handles the change of interface colors based on the state of the dark mode switch
+function handleDarkMode() {
+  // Switches the interface to the dark mode colors when the switch is checked, or back to the default colors
+  document.documentElement.classList.toggle('dark-mode', document.getElementById('darkModeSwitch').checked);
 }
 
 // Handles the change of input mode based on the state of the IP address field mode switch
@@ -1719,7 +1726,7 @@ function showSettings() {
 
     // Show the main header after the loading screen is complete
     $('#main-header').children().show();
-    $('#main-header').css({'backgroundColor': '#333846', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
+    $('#main-header').css({'backgroundColor': 'var(--surface-color)', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
 
     // Show the settings list section
     $('#settings-list').removeClass('hide-container');
@@ -2412,7 +2419,7 @@ function showAppsMode() {
   $('#main-content').removeClass('fullscreen');
   $('#listener').removeClass('fullscreen');
   $('#loadingSpinner').css('display', 'none');
-  $('body').css('backgroundColor', '#282C38');
+  $('body').css('backgroundColor', 'var(--background-color)');
   $('#wasm_module').css('display', 'none');
 
   isInGame = false;
@@ -2459,7 +2466,7 @@ function showApps(host) {
 
         // Show the main header after the loading screen is complete
         $('#main-header').children().show();
-        $('#main-header').css({'backgroundColor': '#333846', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
+        $('#main-header').css({'backgroundColor': 'var(--surface-color)', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
 
         // Show the game grid section
         $('#game-grid').show();
@@ -2688,7 +2695,7 @@ function showApps(host) {
 
         // Show the main header after the loading screen is complete
         $('#main-header').children().show();
-        $('#main-header').css({'backgroundColor': '#333846', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
+        $('#main-header').css({'backgroundColor': 'var(--surface-color)', 'boxShadow': '0 0 4px 0 rgba(0, 0, 0, 1)'});
 
         console.error('%c[index.js, showApps]', 'color: green;', 'Error: Failed to get app list from ' + host.hostname + '. Host object: ', host, '\n' + host.toString()); // Logging both object (for console) and toString-ed object (for text logs)
         var errorAppListImg = new Image();
@@ -3424,6 +3431,14 @@ function saveLanguagePreference() {
   }
 }
 
+function saveDarkMode() {
+  setTimeout(() => {
+    const chosenDarkMode = $('#darkModeSwitch').parent().hasClass('is-checked');
+    console.log('%c[index.js, saveDarkMode]', 'color: green;', 'Saving dark mode state: ' + chosenDarkMode);
+    storeData('darkMode', chosenDarkMode, null);
+  }, 100);
+}
+
 function saveIpAddressFieldMode() {
   setTimeout(() => {
     const chosenIpAddressFieldMode = $('#ipAddressFieldModeSwitch').parent().hasClass('is-checked');
@@ -3819,6 +3834,11 @@ function restoreDefaultsSettingsValues() {
   document.querySelector('#framePacingBtn').MaterialSwitch.off();
   storeData('framePacing', defaultFramePacing, null);
 
+  const defaultDarkMode = false;
+  document.querySelector('#darkModeBtn').MaterialSwitch.off();
+  storeData('darkMode', defaultDarkMode, null);
+  handleDarkMode();
+
   const defaultIpAddressFieldMode = false;
   document.querySelector('#ipAddressFieldModeBtn').MaterialSwitch.off();
   storeData('ipAddressFieldMode', defaultIpAddressFieldMode, null);
@@ -4057,6 +4077,19 @@ function loadUserDataCb() {
     } else {
       document.querySelector('#framePacingBtn').MaterialSwitch.on();
     }
+  });
+
+  console.log('%c[index.js, loadUserDataCb]', 'color: green;', 'Load stored darkMode preferences.');
+  getData('darkMode', function(previousValue) {
+    if (previousValue.darkMode == null) {
+      document.querySelector('#darkModeBtn').MaterialSwitch.off(); // Set the default state
+    } else if (previousValue.darkMode == false) {
+      document.querySelector('#darkModeBtn').MaterialSwitch.off();
+    } else {
+      document.querySelector('#darkModeBtn').MaterialSwitch.on();
+    }
+    // Apply the interface colors based on switch state
+    handleDarkMode();
   });
 
   console.log('%c[index.js, loadUserDataCb]', 'color: green;', 'Load stored ipAddressFieldMode preferences.');

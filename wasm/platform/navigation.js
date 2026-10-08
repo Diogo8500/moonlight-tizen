@@ -1118,6 +1118,7 @@ const Views = {
   InterfaceSettings: {
     view: new ListView(() => [
       'selectLanguage',
+      'darkModeBtn',
       'ipAddressFieldModeBtn'
     ]),
     up: function() {
