@@ -4096,6 +4096,8 @@ function initSamsungKeys() {
       'ChannelDown',     // F11
       'ChannelUp',       // F12
       'MediaPlayPause',
+      'MediaPause',
+      'MediaPlay',
     ],
     onKeydownListener: remoteControllerHandler
   };
@@ -4123,10 +4125,10 @@ function initSpecialKeys() {
     }
   });
 
-  // Listen for the 'Play/Pause' key before the streaming session does, so it is never sent to the host
+  // Listen for the 'Play/Pause', 'Play' or 'Pause' key before the streaming session does, so it is never sent to the host
   ['keydown', 'keyup'].forEach(function(eventType) {
     window.addEventListener(eventType, function(e) {
-      if (e.keyCode === tvKey.KEY_PLAY_PAUSE && isInGame === true) {
+      if ((e.keyCode === tvKey.KEY_PLAY_PAUSE || e.keyCode === tvKey.KEY_PAUSE || e.keyCode === tvKey.KEY_PLAY) && isInGame === true) {
         e.preventDefault();
         e.stopPropagation();
         // Open or close the Stream Menu when the key is pressed
